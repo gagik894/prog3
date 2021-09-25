@@ -28,7 +28,7 @@ module.exports = class GrassEater extends LivingCreature {
             this.die();
         }
 
-
+ 
     }
     eat() {
         var grassEaterCells = super.chooseCell(2);
