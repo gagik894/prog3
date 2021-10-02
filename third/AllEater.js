@@ -32,7 +32,6 @@ module.exports = class AllEater extends LivingCreature {
  
     }
     eat() {
-        console.log("eat")
         var grassEaterCells = super.chooseCell(2);
         var meatEaterCells = super.chooseCell(3);
         var grassCells = super.chooseCell(1);

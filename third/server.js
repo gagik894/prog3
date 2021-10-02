@@ -10,7 +10,7 @@ app.get('/', function (req, res) {
     res.redirect('index.html');
 });
 server.listen(3000);
-
+water = false
 grassArr = [];
 grassEaterArr = [];
 meatEaterArr = [];
@@ -31,9 +31,9 @@ function rand(min, max) {
 for (let i = 0; i < n; i++) {
     matrix[i] = [];
     for (let j = 0; j < n; j++) {
-        matrix[i][j] = Math.floor(rand(0, 3))
-        
-    }  
+        matrix[i][j] = 0
+
+    }
 }
 
 io.sockets.emit("send matrix", matrix)
@@ -44,16 +44,16 @@ function createObject() {
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x] == 1) {
-                matrix[y][x] = 1 
+                matrix[y][x] = 1
                 grassArr.push(new Grass(x, y, 1))
             }
             else if (matrix[y][x] == 2) {
                 matrix[y][x] = 2
                 grassEaterArr.push(new GrassEater(x, y, 2))
-            }else if (matrix[y][x] == 3){
+            } else if (matrix[y][x] == 3) {
                 matrix[y][x] = 3
                 meatEaterArr.push(new MeatEater(x, y, 3))
-            }else if (matrix[y][x] == 4){
+            } else if (matrix[y][x] == 4) {
                 matrix[y][x] = 4
                 meatEaterArr.push(new AllEater(x, y, 4))
             };
@@ -97,8 +97,8 @@ function kill() {
 
 function addGrass() {
     for (var i = 0; i < 1000; i++) {
-    var x = Math.floor(Math.random() * matrix[0].length)
-    var y = Math.floor(Math.random() * matrix.length)
+        var x = Math.floor(Math.random() * matrix[0].length)
+        var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
             matrix[y][x] = 1
             var gr = new Grass(x, y, 1)
@@ -108,9 +108,9 @@ function addGrass() {
     io.sockets.emit("send matrix", matrix);
 }
 function addGrassEater() {
-    for (var i = 0; i < 400; i++) {   
-    var x = Math.floor(Math.random() * matrix[0].length)
-    var y = Math.floor(Math.random() * matrix.length)
+    for (var i = 0; i < 400; i++) {
+        var x = Math.floor(Math.random() * matrix[0].length)
+        var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
             matrix[y][x] = 2
             grassEaterArr.push(new GrassEater(x, y, 2))
@@ -119,9 +119,9 @@ function addGrassEater() {
     io.sockets.emit("send matrix", matrix);
 }
 function addMeatEater() {
-    for (var i = 0; i < 90; i++) {   
-    var x = Math.floor(Math.random() * matrix[0].length)
-    var y = Math.floor(Math.random() * matrix.length)
+    for (var i = 0; i < 90; i++) {
+        var x = Math.floor(Math.random() * matrix[0].length)
+        var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
             matrix[y][x] = 3
             meatEaterArr.push(new MeatEater(x, y, 3))
@@ -130,9 +130,9 @@ function addMeatEater() {
     io.sockets.emit("send matrix", matrix);
 }
 function addAllEater() {
-    for (var i = 0; i < 4; i++) {   
-    var x = Math.floor(Math.random() * matrix[0].length)
-    var y = Math.floor(Math.random() * matrix.length)
+    for (var i = 0; i < 4; i++) {
+        var x = Math.floor(Math.random() * matrix[0].length)
+        var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
             matrix[y][x] = 4
             meatEaterArr.push(new AllEater(x, y, 4))
@@ -140,7 +140,22 @@ function addAllEater() {
     }
     io.sockets.emit("send matrix", matrix);
 }
+function addRain() {
+    io.sockets.emit('water', true)
+    for (let i in grassArr) {
+        grassArr[i].mul();
+    }
+    setTimeout(function () { io.sockets.emit('water', false) }, 500);
+    // for (var i = 0; i < 4; i++) {   
+    // var x = Math.floor(Math.random() * matrix[0].length)
+    // var y = Math.floor(Math.random() * matrix.length)
+    //     if (matrix[y][x] == 0) {
+    //         matrix[y][x] = 4
+    //         meatEaterArr.push(new AllEater(x, y, 4))
+    //     }
+    // }
 
+}
 ///new
 
 
@@ -172,14 +187,15 @@ io.on('connection', function (socket) {
     socket.on("add grassEater", addGrassEater);
     socket.on("add meatEater", addMeatEater)
     socket.on("add allEater", addAllEater)
+    socket.on("add rain", addRain)
 });
 
 
 var statistics = {};
 
-setInterval(function() {
+setInterval(function () {
     statistics.grass = grassArr.length;
     statistics.grassEater = grassEaterArr.length;
-    fs.writeFile("statistics.json", JSON.stringify(statistics), function(){
+    fs.writeFile("statistics.json", JSON.stringify(statistics), function () {
     })
-},1000)
+}, 1000)

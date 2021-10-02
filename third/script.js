@@ -1,5 +1,6 @@
 var socket = io();
-
+let water = false
+let weath = "winter";
 var side = 10;
 function setup() {
     createCanvas(50 * side, 50 * side);
@@ -9,7 +10,9 @@ function setup() {
 socket.on("weather", function (data) {
     weath = data;
 })
-
+socket.on("water", function (data) {
+    water = data;
+})
 function draw(matrix) {
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[0].length; x++) {
@@ -25,17 +28,22 @@ function draw(matrix) {
                     fill("#4dffa6");
                 }
             } else if (obj == 2) {
-                // if (weath == "summer") {
+                if (weath == "summer") {
                     fill("yellow");
-                // } else if (weath == "autumn") {
-                //     fill("red");
-                // } else if (weath == "winter") {
-                //     fill("red");
-                // } else if (weath == "spring") {
-                //     fill("red");
-                // }
+                } else if (weath == "autumn") {
+                    fill("white");
+                } else if (weath == "winter") {
+                    fill("black");
+                } else if (weath == "spring") {
+                    fill("orange");
+                }
             } else if (obj == 0) {
-                fill("grey")
+                if (water == true) {
+                    fill("blue")
+                } else {
+                    fill("grey")
+                }
+                
             } else if (obj == 3) {
                 fill("red")
             }
@@ -65,4 +73,7 @@ function addMeatEater() {
 }
 function addAllEater() {
     socket.emit("add allEater")
+}
+function addRain() {
+    socket.emit("add rain")
 }
