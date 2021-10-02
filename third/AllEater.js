@@ -1,10 +1,11 @@
 
+
 let LivingCreature = require('./LivingCreature')
 
-module.exports = class MeatEater extends LivingCreature {
+module.exports = class AllEater extends LivingCreature {
     constructor(x, y, index) {
         super(x, y, index);
-        this.energy = 14;
+        this.energy = 15;
     }
 
 
@@ -70,8 +71,8 @@ module.exports = class MeatEater extends LivingCreature {
         if (newCell) {
             let newX = newCell[0];
             let newY = newCell[1];
-            matrix[newY][newX] = 3
-            meatEaterArr.push(new MeatEater(newX, newY, 3))
+            matrix[newY][newX] = 4
+            allEaterArr.push(new AllEater(newX, newY, 4))
             this.energy = 16;
             if (weath == "winter") {
                 this.energy -= 4;
@@ -88,9 +89,9 @@ module.exports = class MeatEater extends LivingCreature {
 
     die() {
         matrix[this.y][this.x] = 0;
-        for (var i in meatEaterArr) {
-            if (meatEaterArr[i].x == this.x && meatEaterArr[i].y == this.y) {
-                meatEaterArr.splice(i, 1)
+        for (var i in allEaterArr) {
+            if (allEaterArr[i].x == this.x && allEaterArr[i].y == this.y) {
+                allEaterArr.splice(i, 1)
                 break;
             }
         }

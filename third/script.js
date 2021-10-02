@@ -25,11 +25,22 @@ function draw(matrix) {
                     fill("#4dffa6");
                 }
             } else if (obj == 2) {
-                fill("yellow");
+                // if (weath == "summer") {
+                    fill("yellow");
+                // } else if (weath == "autumn") {
+                //     fill("red");
+                // } else if (weath == "winter") {
+                //     fill("red");
+                // } else if (weath == "spring") {
+                //     fill("red");
+                // }
             } else if (obj == 0) {
                 fill("grey")
             } else if (obj == 3) {
                 fill("red")
+            }
+            else if (obj == 4) {
+                fill("black")
             }
             rect(x * side, y * side, side, side);
         }
@@ -51,4 +62,7 @@ function addGrassEater() {
 }
 function addMeatEater() {
     socket.emit("add meatEater")
+}
+function addAllEater() {
+    socket.emit("add allEater")
 }

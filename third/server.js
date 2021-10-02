@@ -14,6 +14,7 @@ server.listen(3000);
 grassArr = [];
 grassEaterArr = [];
 meatEaterArr = [];
+allEaterArr = [];
 matrix = [];
 
 var n = 50;
@@ -22,6 +23,7 @@ weath = "winter";
 Grass = require("./Grass")
 GrassEater = require("./GrassEater")
 MeatEater = require("./MeatEater")
+AllEater = require("./AllEater")
 function rand(min, max) {
     return Math.random() * (max - min) + min;
 }
@@ -51,7 +53,10 @@ function createObject() {
             }else if (matrix[y][x] == 3){
                 matrix[y][x] = 3
                 meatEaterArr.push(new MeatEater(x, y, 3))
-            }
+            }else if (matrix[y][x] == 4){
+                matrix[y][x] = 4
+                meatEaterArr.push(new AllEater(x, y, 4))
+            };
         }
     }
     io.sockets.emit('send matrix', matrix)
@@ -67,6 +72,9 @@ function game() {
     for (var i in meatEaterArr) {
         meatEaterArr[i].eat();
     }
+    for (var i in allEaterArr) {
+        allEaterArr[i].eat();
+    }
     io.sockets.emit("send matrix", matrix);
 }
 
@@ -77,6 +85,7 @@ function kill() {
     grassArr = [];
     grassEaterArr = []
     meatEaterArr = []
+    allEaterArr = []
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
             matrix[y][x] = 0;
@@ -87,7 +96,7 @@ function kill() {
 
 
 function addGrass() {
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 1000; i++) {
     var x = Math.floor(Math.random() * matrix[0].length)
     var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
@@ -99,7 +108,7 @@ function addGrass() {
     io.sockets.emit("send matrix", matrix);
 }
 function addGrassEater() {
-    for (var i = 0; i < 7; i++) {   
+    for (var i = 0; i < 400; i++) {   
     var x = Math.floor(Math.random() * matrix[0].length)
     var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
@@ -110,7 +119,7 @@ function addGrassEater() {
     io.sockets.emit("send matrix", matrix);
 }
 function addMeatEater() {
-    for (var i = 0; i < 10; i++) {   
+    for (var i = 0; i < 90; i++) {   
     var x = Math.floor(Math.random() * matrix[0].length)
     var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
@@ -120,7 +129,17 @@ function addMeatEater() {
     }
     io.sockets.emit("send matrix", matrix);
 }
-
+function addAllEater() {
+    for (var i = 0; i < 4; i++) {   
+    var x = Math.floor(Math.random() * matrix[0].length)
+    var y = Math.floor(Math.random() * matrix.length)
+        if (matrix[y][x] == 0) {
+            matrix[y][x] = 4
+            meatEaterArr.push(new AllEater(x, y, 4))
+        }
+    }
+    io.sockets.emit("send matrix", matrix);
+}
 
 ///new
 
@@ -152,6 +171,7 @@ io.on('connection', function (socket) {
     socket.on("add grass", addGrass);
     socket.on("add grassEater", addGrassEater);
     socket.on("add meatEater", addMeatEater)
+    socket.on("add allEater", addAllEater)
 });
 
 
