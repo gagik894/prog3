@@ -32,7 +32,16 @@ module.exports = class AllEater extends LivingCreature {
  
     }
     eat() {
+        console.log("eat")
         var grassEaterCells = super.chooseCell(2);
+        var meatEaterCells = super.chooseCell(3);
+        var grassCells = super.chooseCell(1);
+        for(let i = 0; i < meatEaterCells.length; i++){
+            grassEaterCells.push(meatEaterCells[i])
+        }
+        for(let i = 0; i < grassCells.length; i++){
+            grassEaterCells.push(grassCells[i])
+        }
         var newCell = grassEaterCells[Math.floor(Math.random() * grassEaterCells.length)]
         
         if (newCell) {
